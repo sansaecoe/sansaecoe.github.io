@@ -7,16 +7,27 @@
 <meta name="description" content="서울, 좁은 삼각형 건물의 꼭대기 6층. 산새의 둥지 같은 다락방 카페 산새코에.">
 <meta property="og:title" content=". . . s a n s a e c o e . . .">
 <meta property="og:description" content="a soft place to land — and taste .">
-<meta property="og:image" content="https://sansaecoe.github.io/assets/og.jpg">
+<meta property="og:image" content="https://sansaecoe.pages.dev/assets/icon-inquiry.jpg">
 <meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="628">
-<meta property="og:image:alt" content="산새코에 다락방 카페 내부">
-<meta property="og:url" content="https://sansaecoe.github.io/">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="689">
+<meta property="og:image:alt" content="흰 벽과 펜던트 조명, 나무로 만든 새 장식">
+<meta property="og:url" content="https://sansaecoe.pages.dev/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://sansaecoe.pages.dev/assets/icon-inquiry.jpg">
+<link rel="image_src" href="https://sansaecoe.pages.dev/assets/icon-inquiry.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CafeOrCoffeeShop",
+  "name": "산새코에 (sansaecoe)",
+  "url": "https://sansaecoe.pages.dev/",
+  "image": "https://sansaecoe.pages.dev/assets/icon-inquiry.jpg"
+}
+</script>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="style.css?v=20261120r">
+<link rel="stylesheet" href="style.css?v=20261121a">
 <script>
 /* a link that opens one sheet straight away (the QR code in the shop) never
    shows the film — not even for one frame, so this runs before anything is drawn */
@@ -63,6 +74,18 @@
       <span class="cap">About us…</span>
     </button>
 
+    <!-- the picture for contact sits early in the markup on purpose: search
+         crawlers pick the first image they meet, and this is the one we want
+         them to show. its place on the page is set by --x / --y and, on a
+         phone, by the order rules in style.css — not by this order. -->
+    <button class="item" type="button" data-sheet="contact"
+            aria-haspopup="dialog"
+            style="--x:72%; --y:43.5%; --w:clamp(104px, 9.8vw, 144px); --r:3deg; --d:.46s; --wm:128px; --shift:25vw; --rm:-5.5deg">
+      <img src="assets/icon-inquiry.jpg" width="1024" height="689"
+           alt="흰 벽과 펜던트 조명, 나무로 만든 새 장식" data-i18n-alt="alt.contact">
+      <span class="cap" data-i18n="cap.contact">기타 문의 및 제안</span>
+    </button>
+
     <button class="item" type="button" data-sheet="hiyiko"
             aria-haspopup="dialog"
             style="--x:74%; --y:3.5%; --w:clamp(108px, 10.2vw, 150px); --r:4.5deg; --d:.12s; --wm:132px; --shift:-19vw; --rm:-6deg">
@@ -103,14 +126,6 @@
       <img src="assets/icon-cookiebox.png" width="594" height="496"
            alt="새 모양 스티커를 붙이고 실로 묶은 산새코에 쿠키박스" data-i18n-alt="alt.cookiebox">
       <span class="cap" data-i18n="cap.cookiebox">쿠키박스 일시 중단&nbsp;•&#8288;•&#8288;•</span>
-    </button>
-
-    <button class="item" type="button" data-sheet="contact"
-            aria-haspopup="dialog"
-            style="--x:72%; --y:43.5%; --w:clamp(104px, 9.8vw, 144px); --r:3deg; --d:.46s; --wm:128px; --shift:25vw; --rm:-5.5deg">
-      <img src="assets/icon-inquiry.jpg" width="1024" height="689"
-           alt="흰 벽과 펜던트 조명, 나무로 만든 새 장식" data-i18n-alt="alt.contact">
-      <span class="cap" data-i18n="cap.contact">기타 문의 및 제안</span>
     </button>
 
     <button class="item" type="button" data-sheet="hours"

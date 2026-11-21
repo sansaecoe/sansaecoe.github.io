@@ -256,7 +256,13 @@ button {
     animation-delay: var(--d, 0s);
   }
 
-  .is-ready .item:nth-child(even) img {
+  /* the drift of some objects runs a little slower and the other way —
+     named one by one, not by position, so the markup can move for crawlers
+     without the breathing changing */
+  .is-ready .item[data-sheet="hiyiko"] img,
+  .is-ready .item[data-sheet="cookiebox"] img,
+  .is-ready .item[data-sheet="hours"] img,
+  .is-ready .item--cloudstone img {
     animation-duration: 11s;
     animation-direction: alternate-reverse;
   }
@@ -1175,6 +1181,18 @@ html[data-lang="jp"] [data-hide-lang~="jp"] {
     transform: translateX(var(--shift, 0)) rotate(var(--rm, var(--r, 0deg)));
     transition-delay: 0s;
   }
+
+  /* the page order here is the old one: the contact picture is written early
+     in the markup for search crawlers, but on a phone it still comes after
+     the cookie box, just before 오시는 길 */
+  .item--print { order: 1; }
+  .item[data-sheet="hiyiko"] { order: 2; }
+  .item[data-sheet="viewfinder"] { order: 3; }
+  .item--cloudstone { order: 4; }
+  .item[data-sheet="rental"] { order: 5; }
+  .item[data-sheet="cookiebox"] { order: 6; }
+  .item[data-sheet="contact"] { order: 7; }
+  .item[data-sheet="hours"] { order: 8; }
 
   /* the six scattered things, much smaller on a phone */
   .item[data-sheet="hiyiko"] {

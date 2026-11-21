@@ -1,0 +1,16 @@
+# . . . s a n s a e c o e . . .
+
+User-agent: *
+Allow: /
+# the cut-out icons belong to the page itself — keep them out of search thumbnails
+Disallow: /assets/icon-hukui.png
+Disallow: /assets/icon-hukui-blink.gif
+Disallow: /assets/icon-viewfinder.png
+Disallow: /assets/icon-cookiebox.png
+
+User-agent: Yeti
+Allow: /
+Disallow: /assets/icon-hukui.png
+Disallow: /assets/icon-hukui-blink.gif
+Disallow: /assets/icon-viewfinder.png
+Disallow: /assets/icon-cookiebox.png
