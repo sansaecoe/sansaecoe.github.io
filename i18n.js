@@ -16,7 +16,7 @@ window.SANSAECOE_I18N = {
     "cap.cloudstone": "Cloud, or stone? <span class=\"muted\">(closed)</span>",
     "alt.cloudstone": "A pale white surface that could be a cloud, or a stone",
     "cap.rental": "Rental",
-    "alt.rental": "The cream door of sansaecoe, in the sun, with shoes lined up outside",
+    "alt.rental": "The cream door of sansaecoe in the sun, with a little wooden birdhouse on the wall beside it",
     "cap.cookiebox": "Cookie box, on pause\u00A0•\u2060•\u2060•",
     "alt.cookiebox": "A sansaecoe cookie box tied with thread and sealed with a bird sticker",
     "cap.contact": "Other questions & ideas",
@@ -104,7 +104,7 @@ window.SANSAECOE_I18N = {
     "rental.kicker": "Rental",
     "rental.title": "Space rental",
     "rental.p1": "For rental enquiries, please send us a message on Instagram at <a href=\"https://www.instagram.com/sansaecoe\" target=\"_blank\" rel=\"noopener noreferrer\">@sansaecoe</a>. (Available from 2 hours up to 1 full day)",
-    "rental.alt": "The cream door of sansaecoe, in the sun, with shoes lined up outside",
+    "rental.alt": "The cream door of sansaecoe in the sun, with a little wooden birdhouse on the wall beside it",
     "rental.btn": "Ask us on Instagram <span class=\"arrow\" aria-hidden=\"true\">↗</span>",
 
     /* ---- cookie box ---- */
@@ -234,7 +234,7 @@ window.SANSAECOE_I18N = {
     "cap.cloudstone": "雲かな、石かな <span class=\"muted\">(受付終了)</span>",
     "alt.cloudstone": "雲のようでもあり、石のようでもある白い表面",
     "cap.rental": "貸切のご案内",
-    "alt.rental": "日差しの当たるサンセコエのクリーム色のドアと、そろえて脱いだ靴",
+    "alt.rental": "日差しの当たるサンセコエのクリーム色のドアと、その横の壁に掛かった小さな木の巣箱",
     "cap.cookiebox": "クッキーボックス 一時休止中\u00A0•\u2060•\u2060•",
     "alt.cookiebox": "鳥の形のシールを貼り、糸で結んだサンセコエのクッキーボックス",
     "cap.contact": "その他のご相談",
@@ -322,7 +322,7 @@ window.SANSAECOE_I18N = {
     "rental.kicker": "Rental",
     "rental.title": "貸切のご案内",
     "rental.p1": "貸切のご相談は、Instagram <a href=\"https://www.instagram.com/sansaecoe\" target=\"_blank\" rel=\"noopener noreferrer\">@sansaecoe</a> までメッセージをお願いします。(基本2時間から1日貸切まで可能)",
-    "rental.alt": "日差しの当たるサンセコエのクリーム色のドアと、そろえて脱いだ靴",
+    "rental.alt": "日差しの当たるサンセコエのクリーム色のドアと、その横の壁に掛かった小さな木の巣箱",
     "rental.btn": "Instagramで問い合わせる <span class=\"arrow\" aria-hidden=\"true\">↗</span>",
 
     /* ---- cookie box ---- */
