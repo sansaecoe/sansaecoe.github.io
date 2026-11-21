@@ -42,12 +42,12 @@
   }
 
   /* =========================
-     the three languages
+     the languages
      ========================= */
 
   var I18N = window.SANSAECOE_I18N || {};
-  var LANGS = ['ko', 'en', 'jp'];
-  var PAGE_LANG = { ko: 'ko', en: 'en', jp: 'ja' };
+  var LANGS = ['ko', 'en', 'jp', 'tw'];
+  var PAGE_LANG = { ko: 'ko', en: 'en', jp: 'ja', tw: 'zh-Hant' };
   var STORE = 'sansaecoe:lang';
 
   /* the Korean wording as it is written in index.html */
@@ -127,7 +127,7 @@
     var saved = window.localStorage.getItem(STORE);
     if (saved && LANGS.indexOf(saved) !== -1) lang = saved;
   } catch (e) {}
-  var asked = /[?&]lang=(ko|en|jp)\b/.exec(window.location.search);
+  var asked = /[?&]lang=(ko|en|jp|tw)\b/.exec(window.location.search);
   if (asked) lang = asked[1];
 
   var langBtns = Array.prototype.slice.call(document.querySelectorAll('.lang [data-lang]'));
@@ -330,13 +330,13 @@
     return isoAdded(PICKUP_MAX_DAYS);
   }
 
-  /* 11월 24일 / 24 Nov / 11月24日 */
+  /* 11월 24일 / 24 Nov / 11月24日 / 11月24日 */
   function shortDate(iso) {
     var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
     if (!m) return '';
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     if (lang === 'en') return (+m[3]) + ' ' + months[+m[2] - 1];
-    if (lang === 'jp') return (+m[2]) + '月' + (+m[3]) + '日';
+    if (lang === 'jp' || lang === 'tw') return (+m[2]) + '月' + (+m[3]) + '日';
     return (+m[2]) + '월 ' + (+m[3]) + '일';
   }
 
@@ -356,13 +356,14 @@
     var days = {
       ko: ['일', '월', '화', '수', '목', '금', '토'],
       en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      jp: ['日', '月', '火', '水', '木', '金', '土']
+      jp: ['日', '月', '火', '水', '木', '金', '土'],
+      tw: ['日', '一', '二', '三', '四', '五', '六']
     };
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var w = (days[lang] || days.ko)[d.getDay()];
 
     if (lang === 'en') return w + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
-    if (lang === 'jp') return m[1] + '年' + (+m[2]) + '月' + (+m[3]) + '日（' + w + '）';
+    if (lang === 'jp' || lang === 'tw') return m[1] + '年' + (+m[2]) + '月' + (+m[3]) + '日（' + w + '）';
     return m[1] + '년 ' + (+m[2]) + '월 ' + (+m[3]) + '일 (' + w + ')';
   }
 
