@@ -29,6 +29,19 @@
   if (ORDER_CLOSED) document.documentElement.classList.add('is-order-closed');
 
   /* =========================
+     the small counts
+     google analytics is on the page, but it may not have arrived (a blocker,
+     a slow network). nothing here ever waits on it or breaks without it.
+     ========================= */
+
+  function track(name, params) {
+    if (typeof window.gtag !== 'function') return;
+    try {
+      window.gtag('event', name, params || {});
+    } catch (err) {}
+  }
+
+  /* =========================
      the three languages
      ========================= */
 
@@ -179,6 +192,8 @@
     if (trigger) opener = trigger;
     currentId = id;
     seq += 1;
+
+    track('select_content', { content_type: 'sheet', content_id: id });
 
     sheetBody.innerHTML = '';
     sheetBody.appendChild(tpl.content.cloneNode(true));
@@ -676,6 +691,7 @@
         signal: ctrl ? ctrl.signal : undefined
       }).then(function () {
         window.clearTimeout(timer);
+        track('hiyiko_order_submit', { product: answers.product });
         orderDone(answers);
       }).catch(function () {
         window.clearTimeout(timer);

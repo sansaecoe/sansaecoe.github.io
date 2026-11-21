@@ -14,3 +14,5 @@ Disallow: /assets/icon-hukui.png
 Disallow: /assets/icon-hukui-blink.gif
 Disallow: /assets/icon-viewfinder.png
 Disallow: /assets/icon-cookiebox.png
+
+Sitemap: https://sansaecoe.pages.dev/sitemap.xml
