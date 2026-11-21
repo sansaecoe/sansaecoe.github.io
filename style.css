@@ -1731,6 +1731,42 @@ html.skip-intro body {
   color: var(--ink);
 }
 
+/* an answer the stock has run out of: it stays where it is, dimmed, with a
+   small (품절) resting at its right, and cannot be chosen */
+
+.sheet .order-choice.is-soldout,
+.sheet .order-choice.is-soldout:hover {
+  border-color: var(--line);
+  background: #faf9f6;
+  color: var(--faint);
+  cursor: not-allowed;
+}
+
+.sheet .order-choice.is-soldout input {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.sheet .order-choice.is-soldout > span:not(.order-soldout) {
+  min-width: 0;
+}
+
+.sheet .order-soldout {
+  display: none;
+  flex: none;
+  align-self: center;
+  margin-left: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.sheet .order-choice.is-soldout .order-soldout {
+  display: inline-block;
+}
+
 /* a line to write on */
 
 .sheet .order-input {

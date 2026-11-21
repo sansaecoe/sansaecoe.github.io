@@ -27,7 +27,7 @@
 }
 </script>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="style.css?v=20261121a">
+<link rel="stylesheet" href="style.css?v=20261121b">
 <script>
 /* a link that opens one sheet straight away (the QR code in the shop) never
    shows the film — not even for one frame, so this runs before anything is drawn */
@@ -379,21 +379,25 @@
         <div class="order-q-help">
           <p data-i18n="order.q2help">* * * 단품엔 소서가 포함되지 않습니다. 잔과 소서를 함께 원하신다면 세트로 골라주세요.</p>
         </div>
+        <!-- how many saucers an answer needs: the stock sheet decides which
+             of these can still be chosen (data-soser in script.js) -->
         <label class="order-choice">
-          <input type="radio" name="entry.1212348438" value="히요코 잔 단품 (68,000원)">
+          <input type="radio" name="entry.1212348438" value="히요코 잔 단품 (68,000원)" data-soser="0">
           <span data-i18n="order.opt1">히요코 잔 단품 (68,000원)</span>
         </label>
         <label class="order-choice">
-          <input type="radio" name="entry.1212348438" value="히요코 잔 단품 X 2조 (136,000원)">
+          <input type="radio" name="entry.1212348438" value="히요코 잔 단품 X 2조 (136,000원)" data-soser="0">
           <span data-i18n="order.opt2">히요코 잔 단품 X 2조 (136,000원)</span>
         </label>
         <label class="order-choice">
-          <input type="radio" name="entry.1212348438" value="히요코 잔 세트 (79,000원)">
+          <input type="radio" name="entry.1212348438" value="히요코 잔 세트 (79,000원)" data-soser="1">
           <span data-i18n="order.opt3">히요코 잔 세트 (79,000원)</span>
+          <span class="order-soldout" data-i18n="order.soldOut">(품절)</span>
         </label>
         <label class="order-choice">
-          <input type="radio" name="entry.1212348438" value="히요코 잔 세트 X 2조 (158,000원)">
+          <input type="radio" name="entry.1212348438" value="히요코 잔 세트 X 2조 (158,000원)" data-soser="2">
           <span data-i18n="order.opt4">히요코 잔 세트 X 2조 (158,000원)</span>
+          <span class="order-soldout" data-i18n="order.soldOut">(품절)</span>
         </label>
       </div>
 
@@ -647,7 +651,7 @@
   </article>
 </div>
 
-<script src="i18n.js?v=20261120q" defer></script>
-<script src="script.js?v=20261120q" defer></script>
+<script src="i18n.js?v=20261121b" defer></script>
+<script src="script.js?v=20261121b" defer></script>
 </body>
 </html>

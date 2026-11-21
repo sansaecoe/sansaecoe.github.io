@@ -269,6 +269,14 @@
   var ORDER_VIEW = 'https://docs.google.com/forms/d/1mMFNMiNpouspm8B6GLY-5VleLIEhMdzr4Ll9iw5mAw4/viewform';
   var ORDER_DATE = 'entry.521067999';
 
+  /* the saucers are counted in one small google sheet, and the order sheet
+     asks it how many are left every time it opens. if the answer does not
+     come, the form stays exactly as it was — a quiet page, never a blocked
+     one. every set answer carries the number of saucers it needs
+     (data-soser in index.html). */
+  var SAUCER_STOCK_URL = 'https://script.google.com/macros/s/AKfycbzeCNlLJrVlEQUp4l_eP9sj8WH2miva_NGn2MvF1YiJSIynHZDpVm0trXYmZyUDM163sw/exec';
+  var SAUCER_STOCK_TIMEOUT = 6000;
+
   /* the days we cannot hand a cup over: every Wednesday, and now and then
      a day of our own (2026-11-24 was one). add a date here when it comes. */
   var CLOSED_WEEKDAY = 3;
@@ -397,6 +405,92 @@
     var minISO = tomorrowISO();
     var maxISO = latestISO();
 
+    /* ---- how many saucers are left ---- */
+
+    var itemOpts = Array.prototype.slice.call(
+      form.querySelectorAll('input[name="entry.1212348438"]')
+    );
+
+    /* a cup alone needs no saucer; a set needs one, two sets need two */
+    function saucersNeeded(input) {
+      var n = parseInt(input.getAttribute('data-soser') || '0', 10);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function markSoldOut(input, soldOut) {
+      var label = input.closest ? input.closest('.order-choice') : null;
+      var badge = label ? label.querySelector('.order-soldout') : null;
+      if (badge) badge.textContent = T('order.soldOut', '(품절)');
+      input.disabled = soldOut;
+      if (label) label.classList.toggle('is-soldout', soldOut);
+      if (soldOut) input.checked = false;
+    }
+
+    /* the one place that decides which answers can still be chosen */
+    function applyStock(left) {
+      itemOpts.forEach(function (input) {
+        var need = saucersNeeded(input);
+        if (!need) return;
+        markSoldOut(input, left < need);
+      });
+    }
+
+    function soldOutNotice() {
+      showAlert(
+        'order.soldOutAlert',
+        '방금 고르신 세트는 소서가 품절되었어요. 다른 옵션을 골라주세요.',
+        false
+      );
+    }
+
+    /* asking the sheet how many saucers are left. what comes back is only
+       used when it is a number; a slow or broken answer leaves the form
+       exactly as it was */
+    function readStock() {
+      if (!SAUCER_STOCK_URL || !window.fetch) return;
+
+      var ctrl = null;
+      try {
+        if (window.AbortController) ctrl = new AbortController();
+      } catch (err) {}
+      var timer = window.setTimeout(function () {
+        if (ctrl) ctrl.abort();
+      }, SAUCER_STOCK_TIMEOUT);
+
+      fetch(SAUCER_STOCK_URL, {
+        method: 'GET',
+        cache: 'no-store',
+        signal: ctrl ? ctrl.signal : undefined
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          window.clearTimeout(timer);
+          if (!data || typeof data.saucerRemaining !== 'number' || !isFinite(data.saucerRemaining)) return;
+
+          var left = Math.max(0, Math.floor(data.saucerRemaining));
+
+          /* an answer already chosen that has just run out is let go, and a
+             small line says so */
+          var had = null;
+          itemOpts.forEach(function (input) {
+            if (input.checked) had = input;
+          });
+
+          applyStock(left);
+
+          if (had && had.disabled) {
+            var q = qOf(had);
+            if (q) q.classList.remove('is-missing');
+            soldOutNotice();
+          }
+        })
+        .catch(function () {
+          window.clearTimeout(timer);
+        });
+    }
+
+    readStock();
+
     /* from tomorrow on, and never on a day we are closed — a Wednesday, or a
        closing of our own. a day that cannot be kept is cleared at once and
        the small line underneath says why, in the reader's own language. */
@@ -495,7 +589,8 @@
 
       var checks = [
         { q: qOf(agree), ok: !!(agree && agree.checked) },
-        { q: qOf(item), ok: !!item },
+        /* an answer the stock has run out of must never go out */
+        { q: qOf(item), ok: !!item && !item.disabled },
         { q: qOf(paid), ok: !!paid },
         { q: qOf(pack), ok: !!pack },
         { q: qOf(dateEl), ok: /^\d{4}-\d{2}-\d{2}$/.test(dateVal) && dateVal >= minISO && dateVal <= maxISO && !closedReason(dateVal) },
@@ -530,6 +625,9 @@
             key = 'order.alertDate';
             ko = '희망 픽업일은 내일 이후 날짜로 골라주세요.';
           }
+        } else if (first.q === qOf(item) && item && item.disabled) {
+          key = 'order.soldOutAlert';
+          ko = '고르신 세트는 소서가 품절되었어요. 다른 옵션을 골라주세요.';
         } else if (first.q === qOf(phoneEl) && phoneEl && phoneEl.value.trim()) {
           key = 'order.alertPhone';
           ko = '연락처를 한 번 더 확인해 주세요.';
