@@ -41,6 +41,15 @@
     } catch (err) {}
   }
 
+  /* meta's pixel is on the page as well, and may also never arrive. the same
+     rule: a missing or broken pixel is silent, and nothing waits on it. */
+  function pixel(name, params) {
+    if (typeof window.fbq !== 'function') return;
+    try {
+      window.fbq('track', name, params || {});
+    } catch (err) {}
+  }
+
   /* =========================
      the languages
      ========================= */
@@ -415,6 +424,9 @@
        so there is nothing to fill and nothing that could be sent */
     if (ORDER_CLOSED) return;
 
+    /* the order sheet is open, and the cups are on offer */
+    pixel('ViewContent', { content_name: 'Hiyoko Cup' });
+
     var dateEl = form.querySelector('#orderDate');
     var hint = form.querySelector('#orderDateHint');
     var alertEl = form.querySelector('#orderAlert');
@@ -745,6 +757,7 @@
       }).then(function () {
         window.clearTimeout(timer);
         track('hiyiko_order_submit', { product: answers.product });
+        pixel('Lead', { content_name: 'Hiyoko Cup Order' });
         orderDone(answers);
       }).catch(function () {
         window.clearTimeout(timer);
