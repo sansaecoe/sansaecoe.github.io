@@ -24,7 +24,7 @@
      it was — that is the only line to touch.
      ========================= */
 
-  var ORDER_CLOSED = true;
+  var ORDER_CLOSED = false;
 
   if (ORDER_CLOSED) document.documentElement.classList.add('is-order-closed');
 
