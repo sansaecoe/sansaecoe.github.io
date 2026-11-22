@@ -284,11 +284,12 @@
   var ORDER_VIEW = 'https://docs.google.com/forms/d/1mMFNMiNpouspm8B6GLY-5VleLIEhMdzr4Ll9iw5mAw4/viewform';
   var ORDER_DATE = 'entry.521067999';
 
-  /* the saucers are counted in one small google sheet, and the order sheet
-     asks it how many are left every time it opens. if the answer does not
-     come, the form stays exactly as it was — a quiet page, never a blocked
-     one. every set answer carries the number of saucers it needs
-     (data-soser in index.html). */
+  /* the cups and the saucers are counted in one small google sheet, and the
+     order sheet asks it how many are left every time it opens. if the answer
+     does not come, the form stays exactly as it was — a quiet page, never a
+     blocked one. every answer carries the number of cups and of saucers it
+     needs (data-cup, data-soser in index.html), and an answer is out when
+     either of them has run short. */
   var SAUCER_STOCK_URL = 'https://script.google.com/macros/s/AKfycbzeCNlLJrVlEQUp4l_eP9sj8WH2miva_NGn2MvF1YiJSIynHZDpVm0trXYmZyUDM163sw/exec';
   var SAUCER_STOCK_TIMEOUT = 6000;
 
@@ -421,16 +422,31 @@
     var minISO = tomorrowISO();
     var maxISO = latestISO();
 
-    /* ---- how many saucers are left ---- */
+    /* ---- how many cups and how many saucers are left ---- */
 
     var itemOpts = Array.prototype.slice.call(
       form.querySelectorAll('input[name="entry.1212348438"]')
     );
 
-    /* a cup alone needs no saucer; a set needs one, two sets need two */
-    function saucersNeeded(input) {
-      var n = parseInt(input.getAttribute('data-soser') || '0', 10);
+    var allOutEl = form.querySelector('#orderStockAll');
+
+    /* what the sheet last said. null means we do not know — an older sheet
+       that answers with saucers only leaves the cups exactly as they were */
+    var saucerLeft = null;
+    var cupLeft = null;
+    var allSoldOut = false;
+
+    /* a cup alone needs one cup; the set needs one cup and one saucer; two
+       of either needs two */
+    function needed(input, attr) {
+      var n = parseInt(input.getAttribute(attr) || '0', 10);
       return isNaN(n) ? 0 : n;
+    }
+
+    /* a number the sheet sent, or null when it is not a number at all */
+    function countOf(v) {
+      if (typeof v !== 'number' || !isFinite(v)) return null;
+      return Math.max(0, Math.floor(v));
     }
 
     function markSoldOut(input, soldOut) {
@@ -442,16 +458,32 @@
       if (soldOut) input.checked = false;
     }
 
-    /* the one place that decides which answers can still be chosen */
-    function applyStock(left) {
+    /* the one place that decides which answers can still be chosen: an
+       answer is out when either the cups or the saucers it needs have run
+       short, and while no cup is left nothing at all can be chosen */
+    function applyStock() {
+      allSoldOut = cupLeft !== null && cupLeft <= 0;
+
       itemOpts.forEach(function (input) {
-        var need = saucersNeeded(input);
-        if (!need) return;
-        markSoldOut(input, left < need);
+        var short = false;
+        if (cupLeft !== null && cupLeft < needed(input, 'data-cup')) short = true;
+        if (saucerLeft !== null && saucerLeft < needed(input, 'data-soser')) short = true;
+        markSoldOut(input, short);
       });
+
+      if (allOutEl) allOutEl.classList.toggle('is-on', allSoldOut);
+      if (btn) btn.disabled = allSoldOut;
     }
 
-    function soldOutNotice() {
+    function soldOutNotice(what) {
+      if (what === 'cup') {
+        showAlert(
+          'order.cupSoldOutAlert',
+          '방금 고르신 옵션은 잔이 품절되었어요. 다른 옵션을 골라주세요.',
+          false
+        );
+        return;
+      }
       showAlert(
         'order.soldOutAlert',
         '방금 고르신 세트는 소서가 품절되었어요. 다른 옵션을 골라주세요.',
@@ -459,9 +491,9 @@
       );
     }
 
-    /* asking the sheet how many saucers are left. what comes back is only
-       used when it is a number; a slow or broken answer leaves the form
-       exactly as it was */
+    /* asking the sheet how many are left. each number is used only when it
+       really is a number; a slow or broken answer, or an older sheet that
+       does not count the cups yet, leaves the form exactly as it was */
     function readStock() {
       if (!SAUCER_STOCK_URL || !window.fetch) return;
 
@@ -481,23 +513,31 @@
         .then(function (res) { return res.json(); })
         .then(function (data) {
           window.clearTimeout(timer);
-          if (!data || typeof data.saucerRemaining !== 'number' || !isFinite(data.saucerRemaining)) return;
+          if (!data) return;
 
-          var left = Math.max(0, Math.floor(data.saucerRemaining));
+          var nextSaucer = countOf(data.saucerRemaining);
+          var nextCup = countOf(data.cupRemaining);
+          if (nextSaucer === null && nextCup === null) return;
+
+          if (nextSaucer !== null) saucerLeft = nextSaucer;
+          if (nextCup !== null) cupLeft = nextCup;
 
           /* an answer already chosen that has just run out is let go, and a
-             small line says so */
+             small line says so (while no cup is left the line under the
+             choices already says all of it) */
           var had = null;
           itemOpts.forEach(function (input) {
             if (input.checked) had = input;
           });
 
-          applyStock(left);
+          applyStock();
 
-          if (had && had.disabled) {
+          if (had && had.disabled && !allSoldOut) {
             var q = qOf(had);
             if (q) q.classList.remove('is-missing');
-            soldOutNotice();
+            soldOutNotice(
+              cupLeft !== null && cupLeft < needed(had, 'data-cup') ? 'cup' : 'saucer'
+            );
           }
         })
         .catch(function () {
@@ -590,6 +630,18 @@
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+
+      /* no cup of this round is left: the sheet stays readable, and nothing
+         goes out (the line under the choices says why) */
+      if (allSoldOut) {
+        showAlert(
+          'order.soldOutAll',
+          '이번에 준비한 히요코 잔이 모두 품절되었어요. 다음 소식을 기다려 주세요.',
+          false
+        );
+        return;
+      }
+
       if (btn.disabled) return;
 
       var agree = form.querySelector('input[name="entry.513669972"]');

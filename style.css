@@ -1857,6 +1857,13 @@ html.skip-intro body {
   display: block;
 }
 
+/* every cup of this round gone: one line under the four choices, in the
+   reader's own language */
+
+.sheet .order-q .order-stock-all {
+  margin: 16px 0 0;
+}
+
 .sheet .order-alert .order-direct {
   display: block;
   margin-top: 4px;
