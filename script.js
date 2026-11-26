@@ -302,10 +302,11 @@
   var SAUCER_STOCK_URL = 'https://script.google.com/macros/s/AKfycbzeCNlLJrVlEQUp4l_eP9sj8WH2miva_NGn2MvF1YiJSIynHZDpVm0trXYmZyUDM163sw/exec';
   var SAUCER_STOCK_TIMEOUT = 6000;
 
-  /* the days we cannot hand a cup over: every Wednesday, and now and then
-     a day of our own (2026-11-24 was one). add a date here when it comes. */
+  /* the days we cannot hand a cup over: every Wednesday, plus any one-off
+     closing day of our own. add an ISO date here when one comes (none right
+     now — the 24 Nov 2026 one-off closing has passed and is gone). */
   var CLOSED_WEEKDAY = 3;
-  var CLOSED_DATES = ['2026-11-24'];
+  var CLOSED_DATES = [];
 
   /* the pickup is from the day after the order is written, as the form says */
   var PICKUP_FROM_TOMORROW = true;
@@ -340,7 +341,7 @@
     return isoAdded(PICKUP_MAX_DAYS);
   }
 
-  /* 11월 24일 / 24 Nov / 11月24日 / 11月24日 */
+  /* the date in short form, in the language being read */
   function shortDate(iso) {
     var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
     if (!m) return '';
